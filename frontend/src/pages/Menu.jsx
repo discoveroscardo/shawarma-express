@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAllDishes } from '../api/menuService';
+import { getAllDishes } from '../services/api';
 import logo from '../assets/Shawarma_Express_Logo.png';
 
 export default function Menu() {

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Telegraf, Scenes, session } = require('telegraf');
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+console.log('Prueba con:', await bot.telegram.getMe());
 
 // Importar middlewares y servicios
 const authMiddleware = require('./middlewares/authMiddleware');

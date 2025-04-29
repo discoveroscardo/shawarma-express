@@ -15,13 +15,13 @@ const accountHandler = require('./handlers/account');
 const statusHandler = require('./handlers/status');
 
 // Configurar sesiones y escenas
-const orderWizard = require('./wizards/orderWizard'); // Nuevo wizard para pedidos
+const orderWizard = require('./wizards/orderWizard.js/orderWizard'); // Nuevo wizard para pedidos
 const stage = new Scenes.Stage([orderWizard]);
 
 // Middlewares
 bot.use(session());
 bot.use(stage.middleware());
-bot.use(authMiddleware);
+// bot.use(authMiddleware);
 
 // Comandos
 bot.start(startHandler);

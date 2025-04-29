@@ -1,6 +1,7 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
-const Menu = require('../models/Menu');
+// const mongoose = require('mongoose');
+mongoose.connect('mongodb+srv://admin:Programando.01@cluster0.bjooj.mongodb.net/shawarma?retryWrites=true&w=majority')
+const Menu = require('../models/MenuItem');
 
 const menuItems = [
   { name: 'Hummus con pan pita', description: '', price: 5, category: 'entrante' },
@@ -14,8 +15,8 @@ const menuItems = [
 
 mongoose.connect(process.env.MONGO_URI)
   .then(async () => {
-    await Menu.deleteMany();
-    await Menu.insertMany(menuItems);
+    await MenuItem.deleteMany();
+    await MenuItem.insertMany(menuItems);
     console.log('✅ Menú insertado correctamente');
     mongoose.disconnect();
   })

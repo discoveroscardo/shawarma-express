@@ -4,7 +4,7 @@ const OrderService = require('../services/orderService');
 
 let awaitingOrder = {}; // Temporal por usuario
 
-module.exports = async (ctx) => {
+const orderHandler = async (ctx) => {
   const menuItems = await MenuService.getAllMenus();
   if (!menuItems.length) return ctx.reply('No hay productos para pedir 😞');
 
@@ -50,3 +50,5 @@ bot.on('text', async (ctx) => {
     ctx.reply('❌ Error al registrar tu pedido.');
   }
 });
+
+module.exports = orderHandler;

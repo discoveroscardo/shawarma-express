@@ -1,68 +1,79 @@
 require('dotenv').config();
 const { Telegraf, Scenes, session } = require('telegraf');
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-console.log('Prueba con:', await bot.telegram.getMe());
 
-// Importar middlewares y servicios
-const authMiddleware = require('./middlewares/authMiddleware');
-const OrderService = require('./services/orderService');
-const MenuService = require('./services/menuService');
+// 1. Inicialización con más opciones de debug
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN, {
+  telegram: { 
+    agent: null, // Fuerza conexión limpia
+    testEnv: process.env.NODE_ENV === 'test' // Solo para testing
+  }
+});
 
-// Importar handlers
+// Debug inicial
+console.log('=== INICIANDO BOT ===');
+console.log('Token:', process.env.TELEGRAM_BOT_TOKEN?.slice(0, 10) + '...');
+console.log('MongoDB:', process.env.MONGO_URI?.slice(0, 25) + '...');
+
+// 2. Configuración básica primero
+bot.use((ctx, next) => {
+  console.log(`[Update] ${ctx.updateType} from ${ctx.from?.id}`);
+  return next();
+});
+
+// 3. Importar handlers CORRECTAMENTE
 const startHandler = require('./handlers/start');
 const menuHandler = require('./handlers/menu');
-const orderHandler = require('./handlers/order');
 const accountHandler = require('./handlers/account');
 const statusHandler = require('./handlers/status');
+const orderHandler = require('./handlers/order')
 
-// Configurar sesiones y escenas
-const orderWizard = require('./wizards/orderWizard.js/orderWizard'); // Nuevo wizard para pedidos
-const stage = new Scenes.Stage([orderWizard]);
-
-// Middlewares
-bot.use(session());
-bot.use(stage.middleware());
-// bot.use(authMiddleware);
-
-// Comandos
+// 4. Registrar comandos SIN middlewares complejos primero
 bot.start(startHandler);
 bot.command('menu', menuHandler);
-bot.command('pedir', (ctx) => ctx.scene.enter('ORDER_WIZARD'));
 bot.command('micuenta', accountHandler);
 bot.command('estado', statusHandler);
+bot.command('orden', orderHandler);
 
-// Callbacks
-bot.action(/status_(\w+)/, async (ctx) => {
-  const orderId = ctx.match[1];
-  const order = await OrderService.getOrderById(orderId);
-  
-  if (!order) {
-    return ctx.reply('Pedido no encontrado');
-  }
-  
-  const statusMessages = {
-    pending: '⏳ Tu pedido está pendiente',
-    preparing: '👨‍🍳 Tu pedido está en preparación',
-    out_for_delivery: '🚴 Tu pedido está en camino',
-    completed: '✅ Pedido completado. ¡Gracias!'
-  };
-  
-  ctx.reply(statusMessages[order.status] || `Estado: ${order.status}`);
+// 5. Wizard simplificado (comentado temporalmente)
+// const orderWizard = new Scenes.WizardScene(...);
+// const stage = new Scenes.Stage([orderWizard]);
+// bot.use(stage.middleware());
+
+// 6. Handler básico para /pedir (temporal)
+bot.command('pedir', (ctx) => {
+  console.log('Comando /pedir recibido');
+  ctx.reply('Función de pedido temporal. Usa /menu primero.');
 });
 
-// Manejo de errores
+// 7. Manejo de errores mejorado
 bot.catch((err, ctx) => {
-  console.error(`Error en ${ctx.updateType}:`, err);
-  ctx.reply('❌ Ocurrió un error procesando tu solicitud');
+  console.error('‼️ ERROR CRÍTICO:', err);
+  ctx.reply('⚠️ Error interno. Por favor, inténtalo más tarde.');
 });
 
-// Iniciar bot
-bot.launch()
-  .then(() => console.log('🤖 Bot iniciado correctamente'))
-  .catch(err => console.error('🚨 Error al iniciar bot:', err));
+// 8. Inicio seguro con verificación
+const start = async () => {
+  try {
+    const botInfo = await bot.telegram.getMe();
+    console.log('🤖 Bot info:', botInfo);
+    
+    await bot.launch();
+    console.log('🚀 Bot iniciado correctamente');
+    
+    // Verificación adicional
+    bot.telegram.sendMessage(
+      process.env.ADMIN_CHAT_ID, 
+      '🔔 Bot reiniciado correctamente'
+    ).catch(e => console.log('No se pudo notificar al admin:', e));
+    
+  } catch (err) {
+    console.error('💥 ERROR AL INICIAR:', err);
+    process.exit(1);
+  }
+};
+
+start();
 
 // Manejo de cierre
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
-module.exports = bot;

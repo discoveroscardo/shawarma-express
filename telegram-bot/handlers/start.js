@@ -1,6 +1,6 @@
 const { Markup } = require('telegraf');
 
-module.exports = (ctx) => {
+const startHandler = (ctx) => {
   const welcomeMessage = 
     '¡Bienvenido a *Shawarma Express*! 🥙\n\n' +
     'Conmigo puedes:\n' +
@@ -18,3 +18,5 @@ module.exports = (ctx) => {
     .oneTime()
   );
 };
+
+module.exports = startHandler;

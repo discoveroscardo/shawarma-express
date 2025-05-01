@@ -17,8 +17,6 @@ const orderHandler = async (ctx) => {
   );
 };
 
-// Captura del pedido
-// const bot = require('../botInstance'); // Para que acceda al bot
 bot.on('text', async (ctx) => {
   const userId = ctx.from.id;
 

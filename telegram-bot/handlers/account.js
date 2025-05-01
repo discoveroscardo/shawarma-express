@@ -1,7 +1,7 @@
 const { Markup } = require('telegraf');
 const OrderService = require('../services/orderService');
 
-module.exports = async (ctx) => {
+const accountHandler = async (ctx) => {
   // Usuario disponible por el middleware
   const user = ctx.user;
   
@@ -25,3 +25,5 @@ function formatOrders(orders) {
     `#${o._id} - ${o.status} - ${o.items.join(', ')}`
   ).join('\n') || 'Aún no tienes pedidos';
 }
+
+module.exports = accountHandler;

@@ -32,7 +32,7 @@ bot.start(startHandler);
 bot.command('menu', menuHandler);
 bot.command('micuenta', accountHandler);
 bot.command('estado', statusHandler);
-bot.command('orden', orderHandler);
+bot.command('pedir', orderHandler);
 
 // 5. Wizard simplificado (comentado temporalmente)
 // const orderWizard = new Scenes.WizardScene(...);

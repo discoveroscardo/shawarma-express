@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const { Telegraf, Scenes, session } = require('telegraf');
 const mongoose = require('mongoose');
 

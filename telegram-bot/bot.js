@@ -72,14 +72,6 @@ const start = async () => {
     await bot.launch();
     console.log('🚀 Bot iniciado correctamente');
 
-    // Notificar al admin si está definido
-    if (process.env.ADMIN_CHAT_ID) {
-      await bot.telegram.sendMessage(
-        process.env.ADMIN_CHAT_ID,
-        '🔔 Bot reiniciado correctamente'
-      );
-    }
-
   } catch (err) {
     console.error('💥 ERROR AL INICIAR:', err);
     process.exit(1);

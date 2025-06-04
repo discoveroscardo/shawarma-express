@@ -1,23 +1,30 @@
-// index.js - Backend básico en Express
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-const express = require("express");
-const cors = require("cors");
+const orderRoutes = require('./src/api/routes/orders');
+const errorHandler = require('./src/api/middlewares/errorHandler');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+// Middleware base
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("¡Bienvenido a Shawarma Express!");
+// Rutas
+app.use('/api/orders', orderRoutes);
+
+// Conexión a la base de datos
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('✅ MongoDB conectado'))
+  .catch(err => console.error('❌ Error al conectar con MongoDB:', err));
+
+// Middleware de errores
+app.use(errorHandler);
+
+// Arrancar servidor
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor en http://localhost:${PORT}`);
 });
-
-// Conexión a la base de datos (MongoDB) y otros servicios pueden ir aquí
-// También puedes agregar rutas más tarde
-
-app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
-});
-

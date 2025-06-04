@@ -5,6 +5,12 @@ const OrderService = require('../services/orderService');
 const orderWizard = new Scenes.WizardScene(
   'ORDER_WIZARD',
   
+
+  async (ctx) => {
+    await ctx.reply('¿Qué quieres pedir?');
+    return ctx.wizard.next();
+  },
+  
   // Paso 1: Mostrar menú
   async (ctx) => {
     try {

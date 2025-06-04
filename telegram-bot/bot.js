@@ -1,6 +1,20 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   require('dotenv').config();
+// }
+
+const express = require('express');
+const app = express();
+
+// Ruta básica para mantener a Render feliz
+app.get('/', (req, res) => {
+  res.send('Shawarma bot is running');
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Servidor Express escuchando en el puerto ${PORT}`);
+});
+
 const { Telegraf, Scenes, session } = require('telegraf');
 const mongoose = require('mongoose');
 

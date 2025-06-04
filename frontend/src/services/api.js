@@ -1,14 +1,16 @@
-// frontend/src/services/api.js (Corregido)
+// frontend/src/services/api.js
 import axios from 'axios';
 
-const API_BASE = process.env.BACKEND_URL || 'https://shawarma-express.onrender.com/api';
+const API = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000/api',
+});
 
 export const getOrders = async () => {
-  const response = await axios.get(`${API_BASE}/orders`);
+  const response = await API.get('/orders');
   return response.data;
 };
 
 export const updateOrderStatus = async (orderId, status) => {
-  const response = await axios.put(`${API_BASE}/orders/${orderId}`, { status });
+  const response = await API.patch(`/orders/${orderId}/status`, { status });
   return response.data;
 };

@@ -8,19 +8,21 @@ const dishSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   price: {
     type: Number,
     required: true,
     min: 0
   },
+  image: {
+    type: String,
+    required: true
+  },
   category: {
     type: String,
     required: true,
-    enum: ['Shawarma', 'Falafel', 'Kebab', 'Complementos', 'Bebidas'],
-    default: 'Shawarma'
+    enum: ['shawarma', 'falafel', 'sides', 'drinks']
   },
   available: {
     type: Boolean,
@@ -30,6 +32,4 @@ const dishSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const Dish = mongoose.model('Dish', dishSchema);
-
-module.exports = Dish; 
+module.exports = mongoose.model('Dish', dishSchema); 

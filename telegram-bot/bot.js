@@ -1,6 +1,5 @@
-// if (process.env.NODE_ENV !== 'production') {
-//   require('dotenv').config();
-// }
+// Cargar variables de entorno
+require('dotenv').config();
 
 const express = require('express');
 const app = express();
@@ -19,16 +18,17 @@ const { Telegraf, Scenes, session } = require('telegraf');
 const mongoose = require('mongoose');
 
 // === INICIANDO BOT ===
-console.log('Token:', process.env.TELEGRAM_BOT_TOKEN?.slice(0, 10) + '...');
-console.log('MongoDB:', process.env.MONGO_URI?.slice(0, 25) + '...');
+console.log('Token:', process.env.BOT_TOKEN?.slice(0, 10) + '...');
+console.log('MongoDB:', process.env.MONGODB_URI?.slice(0, 25) + '...');
+console.log('Backend URL:', process.env.BACKEND_URL?.slice(0, 25) + '...');
 
 // 1. Conexión a MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ MongoDB conectado'))
   .catch(err => console.error('❌ Error MongoDB:', err));
 
 // 2. Crear instancia del bot
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 // 3. Debug por cada update
 bot.use((ctx, next) => {
